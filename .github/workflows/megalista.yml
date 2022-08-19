@@ -1,0 +1,49 @@
+name: 'Build and Deploy'
+
+on: push
+
+env:
+  ENVIRONMENT_NAME: "${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}"
+
+jobs:
+  
+  deploy:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: .
+    
+    steps:
+      # Checks-out Github Source
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2.2.2
+        with:          
+          python-version: 3.8                  
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: 'Create a bucket and copy config'
+        run: |
+          terraform terraform apply -auto-approve
+          gsutil mb -p ${{ secrets.GCP_PROJECT_ID }} -l ${{ secrets.LOCATION }} gs://${{ secrets.BUCKET_NAME }}
+          gsutil uniformbucketlevelaccess set on gs://${{ secrets.BUCKET_NAME }}
+          gsutil cp configuration.json "gs://${{ secrets.BUCKET_NAME }}/megalista_metadata"
+
+      - name: 'Deploy Terraform stack'
+        run: terraform apply --auto-approve

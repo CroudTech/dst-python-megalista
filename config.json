@@ -1,0 +1,15 @@
+{
+    "service_account_name": "megalista-runner",
+    "scheduler_name": "megalista-job",
+    "location": "europe-west2",
+    "bq_ops_dataset": "megalista_dev_metadata",
+    "bucket_name" : "croud_dev_pvt_megalista_metadata",
+    "developer_token": "",
+    "client_id": "",
+    "client_secret": "",
+    "access_token": "",
+    "refresh_token": "",
+    "setup_sheet_id": "",
+    "setup_json_url": "gs://croud_dev_pvt_megalista_config_store/configuration_sample.json",
+    "setup_firestore_collection": ""
+}
