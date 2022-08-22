@@ -4,8 +4,20 @@ on: push
 
 env:
   ENVIRONMENT_NAME: "${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}"
-  GOOGLE_PROJECT: "prj-croud-dev-megalista"
-  CONFIG_BUCKET_NAME: "croud_dev_pvt_megalista_config_store"
+  GOOGLE_PROJECT: "prj-croud-{{ env.ENVIRONMENT_NAME }}-megalista"
+  CONFIG_BUCKET_NAME: "croud_{{ env.ENVIRONMENT_NAME }}_pvt_megalista_config_store"
+  TF_VAR_bucket_name: "croud_dev_pvt_megalista_metadata"
+  TF_VAR_bq_ops_dataset: "megalista_{{ env.ENVIRONMENT_NAME }}_metadata"
+  TF_VAR_developer_token: ""
+  TF_VAR_client_id: ""
+  TF_VAR_client_secret: ""
+  TF_VAR_access_token: ""
+  TF_VAR_refresh_token: ""
+  TF_VAR_setup_sheet_id: ""
+  TF_VAR_config_bucket_name: "croud_{{ env.ENVIRONMENT_NAME }}_pvt_megalista_config_store"
+  TF_VAR_setup_firestore_collection: ""
+  TF_VAR_region: "europe-west2"
+  TF_VAR_project: "prj-croud-{{ env.ENVIRONMENT_NAME }}-megalista"
 
 jobs:
   
@@ -19,29 +31,44 @@ jobs:
     
     steps:
       # Checks-out Github Source
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup Python
-        uses: actions/setup-python@v2.2.2
+        uses: actions/setup-python@v4
         with:          
-          python-version: 3.8         
+          python-version: 3.8        
+
+      - name: HashiCorp - Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.2.7
      
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -backend-config "bucket=croud_{{ env.ENVIRONMENT_NAME }}_pvt_megalista_terraform_state" 
+
 
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
 
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0.2.0
+      - name: Set up Cloud SDK - PROD
+        if: ${{ env.ENVIRONMENT_NAME == 'prod' }}
+        uses: google-github-actions/setup-gcloud@v0
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID_PROD }}
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_PROD }}
+          export_default_credentials: true
+
+      - name: Set up Cloud SDK - DEV
+        if: ${{ env.ENVIRONMENT_NAME == 'dev' }}
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID_DEV }}
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_DEV }}
           export_default_credentials: true
 
       - name: 'Upload the config file to the bucket'
         run: gsutil cp configuration.json "gs://${{ env.CONFIG_BUCKET_NAME }}/megalista_metadata"
 
       # - name: 'Deploy Terraform stack'
-      #   run: terraform apply --auto-approve
+      #   run: terraform apply --auto-approve 
