@@ -4,6 +4,7 @@ on: push
 
 env:
   ENVIRONMENT_NAME: "${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}"
+  GOOGLE_PROJECT: "prj-croud-dev-megalista"
 
 jobs:
   
@@ -22,8 +23,8 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2.2.2
         with:          
-          python-version: 3.8                  
-
+          python-version: 3.8         
+     
       - name: Terraform Init
         run: terraform init
 
@@ -38,12 +39,8 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
-      - name: 'Create a bucket and copy config'
-        run: |
-          terraform terraform apply -auto-approve
-          gsutil mb -p ${{ secrets.GCP_PROJECT_ID }} -l ${{ secrets.LOCATION }} gs://${{ secrets.BUCKET_NAME }}
-          gsutil uniformbucketlevelaccess set on gs://${{ secrets.BUCKET_NAME }}
-          gsutil cp configuration.json "gs://${{ secrets.BUCKET_NAME }}/megalista_metadata"
+      - name: 'Upload the config file to the bucket'
+        run: gsutil cp configuration.json "gs://${{ secrets.BUCKET_NAME }}/megalista_metadata"
 
-      - name: 'Deploy Terraform stack'
-        run: terraform apply --auto-approve
+      # - name: 'Deploy Terraform stack'
+      #   run: terraform apply --auto-approve
