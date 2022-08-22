@@ -17,6 +17,8 @@ provider "google" {
     ]
 }
 
+
+
 module "megalista"{
     source = "github.com/google/megalista//terraform?ref=2127bb8"
     region = var.region
@@ -30,4 +32,10 @@ module "megalista"{
     developer_token = var.developer_token
     refresh_token = var.refresh_token
     setup_sheet_id = var.setup_sheet_id
+}
+
+resource "google_storage_bucket" "config_storage" {
+  name          = var.config_bucket_name
+  location      = var.region
+  uniform_bucket_level_access = true
 }

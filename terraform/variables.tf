@@ -1,6 +1,6 @@
 variable "bucket_name" {
     type = string
-    description = "Google Cloud Storage Bucket to create"
+    description = "Google Cloud Storage Bucket to create to hold metadata"
 }
 
 variable "bq_ops_dataset" {
@@ -56,4 +56,9 @@ variable "region" {
 variable "project" {
   type        = string
   description = "GCP Project name"
+}
+
+variable "config_bucket_name" {
+    type = string
+    description = "Google Cloud Storage Bucket to create to keep the config"
 }
