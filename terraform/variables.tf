@@ -53,7 +53,7 @@ variable "region" {
   description = "GCP region https://cloud.google.com/compute/docs/regions-zones?hl=pt-br default us-central1"
 }
 
-variable "state_bucket_name"{
-    type = string
-    description = "Terraform state bucket name"
+variable "project" {
+  type        = string
+  description = "GCP Project name"
 }
