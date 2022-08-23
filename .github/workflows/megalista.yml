@@ -9,10 +9,6 @@ env:
   TF_VAR_bucket_name: "croud_dev_pvt_megalista_metadata"
   TF_VAR_bq_ops_dataset: "megalista_{{ env.ENVIRONMENT_NAME }}_metadata"
   TF_VAR_developer_token: ""
-  TF_VAR_client_id: ""
-  TF_VAR_client_secret: ""
-  TF_VAR_access_token: ""
-  TF_VAR_refresh_token: ""
   TF_VAR_setup_sheet_id: ""
   TF_VAR_config_bucket_name: "croud_{{ env.ENVIRONMENT_NAME }}_pvt_megalista_config_store"
   TF_VAR_setup_firestore_collection: ""
@@ -70,5 +66,5 @@ jobs:
       - name: 'Upload the config file to the bucket'
         run: gsutil cp configuration.json "gs://${{ env.CONFIG_BUCKET_NAME }}/megalista_metadata"
 
-      # - name: 'Deploy Terraform stack'
-      #   run: terraform apply --auto-approve 
+      - name: 'Deploy Terraform stack'
+        run: terraform apply --auto-approve 
