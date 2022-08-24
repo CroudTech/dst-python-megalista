@@ -36,7 +36,6 @@ data "google_secret_manager_secret_version" "refresh_token" {
   version  = "1"
 }
 
-
 module "megalista" {
   source                     = "github.com/google/megalista//terraform?ref=2127bb8"
   region                     = var.region

@@ -13,26 +13,6 @@ variable "developer_token" {
   description = "Google Ads developer Token"
 }
 
-variable "client_id" {
-  type        = string
-  description = "OAuth Client Id"
-}
-
-variable "client_secret" {
-  type        = string
-  description = "OAuth Client Secret"
-}
-
-variable "access_token" {
-  type        = string
-  description = "Access Token"
-}
-
-variable "refresh_token" {
-  type        = string
-  description = "Refresh Token"
-}
-
 variable "setup_sheet_id" {
   type        = string
   description = "Setup Sheet Id (leave blank if using JSON or Firestore)"
