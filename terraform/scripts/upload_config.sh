@@ -1,0 +1,1 @@
+gsutil cp ../configuration.json "gs://$1/megalista_metadata"
