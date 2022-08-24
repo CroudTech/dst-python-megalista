@@ -17,23 +17,23 @@ provider "google" {
 }
 
 data "google_secret_manager_secret_version" "client_id" {
-  secret   = "client_id"
-  version  = "1"
+  secret  = "client_id"
+  version = "1"
 }
 
 data "google_secret_manager_secret_version" "client_secret" {
-  secret   = "client_secret"
-  version  = "1"
+  secret  = "client_secret"
+  version = "1"
 }
 
 data "google_secret_manager_secret_version" "access_token" {
-  secret   = "access_token"
-  version  = "1"
+  secret  = "access_token"
+  version = "1"
 }
 
 data "google_secret_manager_secret_version" "refresh_token" {
-  secret   = "refresh_token"
-  version  = "1"
+  secret  = "refresh_token"
+  version = "1"
 }
 
 module "megalista" {
@@ -55,4 +55,16 @@ resource "google_storage_bucket" "config_storage" {
   name                        = var.config_bucket_name
   location                    = var.region
   uniform_bucket_level_access = true
+}
+
+resource "null_resource" "upload_config" {
+  triggers = {
+    file_hash = sha256(file("./scripts/upload_config.sh"))
+  }
+
+  provisioner "local-exec" {
+    command = "(sh ./scripts/upload_config.sh ${var.config_bucket_name})"
+  }
+
+  depends_on = [google_storage_bucket.config_storage]
 }

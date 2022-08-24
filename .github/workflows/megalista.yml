@@ -53,11 +53,6 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v0'
 
-      - name: 'Upload the config file to the bucket'
-        run: gsutil cp configuration.json "gs://${{ env.CONFIG_BUCKET_NAME }}/megalista_metadata"
-        env:
-          CONFIG_BUCKET_NAME: "croud_${{ env.ENVIRONMENT_NAME }}_pvt_megalista_config_store"
-
       - name: 'Deploy Terraform stack'
         working-directory: ./terraform
         run: terraform apply --auto-approve 
@@ -70,3 +65,4 @@ jobs:
           TF_VAR_setup_firestore_collection: ""
           TF_VAR_region: "europe-west2"
           TF_VAR_project: "prj-croud-${{ env.ENVIRONMENT_NAME }}-megalista"
+          

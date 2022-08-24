@@ -13,20 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-echo "deploying..."
+if [ $# != 3 ]; then
+    echo "Usage: $0 gcp_project_id bucket_name region"
+    exit 1
+fi
 
-# if [ $# != 3 ]; then
-#     echo "Usage: $0 gcp_project_id bucket_name region"
-#     exit 1
-# fi
-
-# echo "Move to megalista_dataflow folder"
-# cd ./.terraform/modules/megalista/megalista_dataflow
-# echo "Configuration GCP project in gcloud"
-# gcloud config set project "$1"
-# echo "Build Dataflow metadata"
-# python3 -m pip install --user -q -r requirements.txt
-# python3 -m main --runner DataflowRunner --project "$1" --gcp_project_id "$1" --temp_location "gs://$2/tmp/" --region "$3" --setup_file ./setup.py --template_location "gs://$2/templates/megalista" --num_workers 1 --autoscaling_algorithm=NONE
-# echo "Copy megalista_medata to bucket $2"
-# gsutil cp megalista_metadata "gs://$2/templates/megalista_metadata"
-# cd ..
+echo "Move to megalista_dataflow folder"
+cd ./.terraform/modules/megalista/megalista_dataflow
+echo "Configuration GCP project in gcloud"
+gcloud config set project "$1"
+echo "Build Dataflow metadata"
+python3 -m pip install --user -q -r requirements.txt
+python3 -m main --runner DataflowRunner --project "$1" --gcp_project_id "$1" --temp_location "gs://$2/tmp/" --region "$3" --setup_file ./setup.py --template_location "gs://$2/templates/megalista" --num_workers 1 --autoscaling_algorithm=NONE
+echo "Copy megalista_medata to bucket $2"
+gsutil cp megalista_metadata "gs://$2/templates/megalista_metadata"
+cd ..
