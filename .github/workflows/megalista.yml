@@ -42,6 +42,9 @@ jobs:
         with:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v0'
+
       - name: Terraform Init
         working-directory: ./terraform
         run: terraform init -backend-config "bucket=croud_${{ env.ENVIRONMENT_NAME }}_pvt_megalista_terraform_state" 
@@ -49,9 +52,6 @@ jobs:
       - name: Terraform Validate
         working-directory: ./terraform
         run: terraform validate -no-color
-
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v0'
 
       - name: 'Deploy Terraform stack'
         working-directory: ./terraform
