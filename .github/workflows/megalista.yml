@@ -4,16 +4,16 @@ on: push
 
 env:
   ENVIRONMENT_NAME: "${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}"
-  GOOGLE_PROJECT: "prj-croud-{{ env.ENVIRONMENT_NAME }}-megalista"
-  CONFIG_BUCKET_NAME: "croud_{{ env.ENVIRONMENT_NAME }}_pvt_megalista_config_store"
+  GOOGLE_PROJECT: "prj-croud-${{ env.ENVIRONMENT_NAME }}-megalista"
+  CONFIG_BUCKET_NAME: "croud_${{ env.ENVIRONMENT_NAME }}_pvt_megalista_config_store"
   TF_VAR_bucket_name: "croud_dev_pvt_megalista_metadata"
-  TF_VAR_bq_ops_dataset: "megalista_{{ env.ENVIRONMENT_NAME }}_metadata"
+  TF_VAR_bq_ops_dataset: "megalista_${{ env.ENVIRONMENT_NAME }}_metadata"
   TF_VAR_developer_token: ""
   TF_VAR_setup_sheet_id: ""
-  TF_VAR_config_bucket_name: "croud_{{ env.ENVIRONMENT_NAME }}_pvt_megalista_config_store"
+  TF_VAR_config_bucket_name: "croud_${{ env.ENVIRONMENT_NAME }}_pvt_megalista_config_store"
   TF_VAR_setup_firestore_collection: ""
   TF_VAR_region: "europe-west2"
-  TF_VAR_project: "prj-croud-{{ env.ENVIRONMENT_NAME }}-megalista"
+  TF_VAR_project: "prj-croud-${{ env.ENVIRONMENT_NAME }}-megalista"
 
 jobs:
   
@@ -52,7 +52,7 @@ jobs:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
       - name: Terraform Init
-        run: terraform init -backend-config "bucket=croud_{{ env.ENVIRONMENT_NAME }}_pvt_megalista_terraform_state" 
+        run: terraform init -backend-config "bucket=croud_${{ env.ENVIRONMENT_NAME }}_pvt_megalista_terraform_state" 
 
       - name: Terraform Validate
         id: validate
