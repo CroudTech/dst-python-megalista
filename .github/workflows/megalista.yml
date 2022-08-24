@@ -43,11 +43,11 @@ jobs:
           credentials_json: '${{ secrets.GCP_SA_KEY }}'
 
       - name: Terraform Init
-        working-directory: ./terrafrom
+        working-directory: ./terraform
         run: terraform init -backend-config "bucket=croud_${{ env.ENVIRONMENT_NAME }}_pvt_megalista_terraform_state" 
 
       - name: Terraform Validate
-        working-directory: ./terrafrom
+        working-directory: ./terraform
         run: terraform validate -no-color
 
       - name: 'Set up Cloud SDK'
@@ -59,7 +59,7 @@ jobs:
           CONFIG_BUCKET_NAME: "croud_${{ env.ENVIRONMENT_NAME }}_pvt_megalista_config_store"
 
       - name: 'Deploy Terraform stack'
-        working-directory: ./terrafrom
+        working-directory: ./terraform
         run: terraform apply --auto-approve 
         env: 
           TF_VAR_bucket_name: "croud_${{ env.ENVIRONMENT_NAME }}_pvt_megalista_metadata"
