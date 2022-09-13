@@ -38,25 +38,25 @@ In order to create it, follow these steps:
 ## Updating binaries
 _Deploy_cloud.sh_ is called automatically by the terraform stack, but it can be called manually as well. It generates metadata and reuploads it together with the job template to cloud storage. This script can be used to update job binaries without recreating the infrastructure.
 
-##Upload types
-###Google Ads
+## Upload types
+### Google Ads
 Uploads __gclid__ based offline conversions to Google Ads
 
 https://github.com/google/megalista/wiki/Google-Ads-Offline-Conversions
 
-####Metadata:
+#### Metadata:
 
 __Conversion name__: Name of the created conversion on google ads
 
 __Google Ads Account (Optional):__ define a Google Ads Account Customer Id to override the Account Id defined in the General Configuration on the "Intro" tab. If the Account Id defined in the General Configuration is a Mcc account, the Mcc account will still be used for authentication, however the override Account Id will be used as the Customer Id.
 
-###Google Analytics
+### Google Analytics
 
 Sends hits to a GA Property through Measurement Protocol using __client_id__ or __user_id__
 
 https://github.com/google/megalista/wiki/Google-Analytics---Measurement-Protocol
 
-####Metadata:
+#### Metadata:
 
 - __GA Property Id__
 
@@ -65,7 +65,7 @@ https://github.com/google/megalista/wiki/Google-Analytics---Measurement-Protocol
 - __The hit type__. Allowed values are "event", "transaction" and "item". Defaults to "event" if none is provided.
 
 
-###Campaign Manager
+### Campaign Manager
 Uploads Campaign Manager offline conversions to Campaign Manager floodlights (compatible with CM, SA360 and DV360 conversion optimization and CM + DV360 audience creation) using one of __gclid__, __mobileDeviceId__, __encryptedUserId__, __matchId__.
 
 https://github.com/google/megalista/wiki/Campaign-Manager-Offline-Conversions
@@ -76,7 +76,7 @@ __Metadata__:
 
 - Floodlight Configuration Id: Can be obtained in the URL for the activity
 
-##Local running:
+## Local running:
 https://github.com/google/megalista/wiki/Developing-and-Testing
 
 You can run the Beam job using a DirectRunner. You will still need GCP access to read the config. 
